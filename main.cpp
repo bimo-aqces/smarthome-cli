@@ -137,46 +137,49 @@ void acMenu(){
     } while (user_ac == true);
 }
 
-void lampMenu(){
+int lampValue(){
+
     int lamp_light;
-    bool lamp_status;
-    bool user_light;
-    int user_input_lamp;
+    std::cout << "atur pencahayaan lampu (0-100)";
+    std::cin >> lamp_light;
+    return lamp_light;
+
+}
+
+bool lampStatus(int lamp_light){
+    if(lamp_light != 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+
+}
+
+void lampMenu(int &lamp_light, bool &lamp_status){
+
+    int user_light;
 
     std::cout << "\ningin kontrol lampu? (1/0): ";
 
     do
     {
         std::cin >> user_light;
+        lamp_light = lampValue();
+        lamp_status = lampStatus(lamp_light);
 
-        if (user_light)
+        if (user_light && lamp_status)
         {
-            std::cout << "atur pencahayaan lampu (0-100)";
-            std::cin >> user_input_lamp;
-
-            if (user_input_lamp != 0)
-            {
-                lamp_light = user_input_lamp;
-                lamp_status = true;
-            }
-            else
-            {
-                lamp_status = false;
-            }
-        }
-        else
-        {
-            continue;
-        }
-
-        if (lamp_status)
-        {
-            std::cout << "lampu dinyalakan!\nlamp value = " << lamp_light;
+            std::cout << lamp_light << " " <<  lamp_status;
+            break;
         }
         else
         {
             std::cout << "lampu masih mati";
+            break;
         }
+
+
 
         std::cout << "ingin kontrol lagi? (1/0)";
     } while (user_light == true);
@@ -191,28 +194,51 @@ int main()
     std::srand(std::time(0));
 
     int menu_input;
-    std::cout << "\nwelcome to the program\n(1) Watering\n(2) Control AC\n(3) Control Lamp\n";
-    std::cin >> menu_input;
+    bool user_retry = false;
 
-    switch (menu_input) {
-    case 1: {
-        int humidity_value = showHumidityValue();
-        std::string humidity_status = showHumidityStatus(humidity_value);
-        std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
-        waterMenu(humidity_value);
-        std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
-        break;
-    }
-    case 2: {
-        acMenu();
-    }
-    case 3: {
-        lampMenu();
-    }
-    default:
-        break;
-    }
+    int humidity_value = showHumidityValue();
+    std::string humidity_status = showHumidityStatus(humidity_value);
 
-    std::cout << "\nu are out";
+    int lamp_light;
+    bool lamp_status;
+
+    do{
+        std::cout << "\nwelcome to the program\n(1) Watering\n(2) Control AC\n(3) Control Lamp\n";
+        std::cin >> menu_input;
+        switch (menu_input)
+        {
+        case 1:
+        {
+            std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
+            waterMenu(humidity_value);
+            std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
+            std::cout << "back to main menu? (0/1)";
+            std::cin >> user_retry;
+            break;
+        }
+        case 2:
+        {
+            acMenu();
+            std::cout << "back to main menu? (0/1)";
+            std::cin >> user_retry;
+            break;
+        }
+        case 3:
+        {
+            lampMenu(lamp_light, lamp_status);
+            std::cout << "back to main menu? (0/1)";
+            std::cin >> user_retry;
+            break;
+        }
+        default:
+            std::cout << "invalid";
+            break;
+        }
+    } while (user_retry == true);
+
+    std::cout << "Adjustment Recap:\n";
+    std::cout << "(1) Humidity Value: " << humidity_value << '(' << humidity_status << ')';
+    std::cout << "(2) Lamp light :" << lamp_light << '(' << lamp_status << ')';
+    std::cout << "Adjustment Recap:\n";
 }
 
