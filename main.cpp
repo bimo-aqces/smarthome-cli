@@ -2,13 +2,14 @@
 #include <cmath>
 #include <ctime>
 
-int main(){
-    const int pass_system = 1234;
+const int pass_system = 1234;
+
+bool userSecurity(int max_attempt){
     int pass_input;
-    int max_attempt = 3;
     int user_attempt = 0;
-    do{
-        user_attempt +=1 ;
+    do
+    {
+        user_attempt += 1;
 
         std::cout << "\ninput pass: ";
         std::cin >> pass_input;
@@ -16,15 +17,29 @@ int main(){
         if (pass_input != pass_system)
         {
             std::cout << "\nwrong password, attemp: " << user_attempt;
-            if (user_attempt >= max_attempt){
+            if (user_attempt >= max_attempt)
+            {
                 std::cout << "\nu reached max attemp\n";
-                return 0;
+                return false;
             }
         }
-        else{
-            continue;
+        else
+        {
+            return true;
         }
-    }while (pass_input != pass_system);
+    } while (pass_input != pass_system);
+
+    return false;
+}
+
+
+int main(){
+    int max_attempt = 3;
+    if(!userSecurity(max_attempt)){
+        return 0;
+    }
+
+    std::cout << "\nwelcome to the program\n\n";
 
     std::srand(std::time(0));
     int humidity = std::rand() % 101;
