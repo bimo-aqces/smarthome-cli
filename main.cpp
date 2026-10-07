@@ -32,53 +32,55 @@ bool userSecurity(int max_attempt){
     return false;
 }
 
-
-int main(){
-    int max_attempt = 3;
-    if(!userSecurity(max_attempt)){
-        return 0;
-    }
-
-    std::cout << "\nwelcome to the program\n\n";
-
-    std::srand(std::time(0));
+int showHumidityValue(){
     int humidity = std::rand() % 101;
+    return humidity;
+}
 
-    std::cout << "nilai kelembapan saat ini: "<< humidity;
+
+std::string showHumidityStatus(int humidity_value){
     std::string humidity_status;
 
-    if(humidity >= 0 && humidity <= 30){
+    if (humidity_value >= 0 && humidity_value <= 30)
+    {
         humidity_status = "kering";
-        std::cout <<"\nstatus kelembapan: " << humidity_status;
+        return humidity_status;
     }
-    else if (humidity >= 31 && humidity <= 70)
+    else if (humidity_value >= 31 && humidity_value <= 70)
     {
         humidity_status = "lembab";
-        std::cout <<"\nstatus kelembapan: " << humidity_status;
+        return humidity_status;
     }
     else
     {
         humidity_status = "basah";
-        std::cout <<"\nstatus kelembapan: " << humidity_status;
+        return humidity_status;
     }
+}
 
+
+void waterMenu(int &humidity_value){
     bool user_water = 0;
 
     std::cout << "\ningin menyiram tanaman? (1/0): ";
 
-    do{
+    do
+    {
         std::cin >> user_water;
-        if (user_water){
-            humidity += 20;
-            std::cout << "\npenyiraman dilakukan!" << humidity;
-            std::cout << "\nhumidity saat ini: " << humidity << "\nstatus: " << humidity_status;
+        if (user_water)
+        {
+            humidity_value += 20;
+            std::cout << "\npenyiraman dilakukan!\n";
         }
-        else{
+        else
+        {
             continue;
         }
         std::cout << "\ningin menyiram lagi? (1/0): ";
     } while (user_water == true);
+}
 
+void acMenu(){
     bool user_ac = 0;
     int user_control_temp;
     double temp_ac_celcius;
@@ -86,10 +88,12 @@ int main(){
 
     std::cout << "\ningin kontrol AC? (1/0): ";
 
-    do{
+    do
+    {
         std::cin >> user_ac;
 
-        if (user_ac){
+        if (user_ac)
+        {
             std::cout << "\natur suhu AC:\n(0) off\n(1) low\n(2) medium\n(3) high\n";
             std::cin >> user_control_temp;
 
@@ -115,19 +119,25 @@ int main(){
                 break;
             }
         }
-        else{
+        else
+        {
             continue;
         }
-        if(ac_condition){
+
+        if (ac_condition)
+        {
             std::cout << "suhu ac: " << temp_ac_celcius;
         }
-        else{
+        else
+        {
             std::cout << "ac tetap mati";
         }
 
         std::cout << "\ningin kontrol lagi? (1/0): ";
     } while (user_ac == true);
+}
 
+void lampMenu(){
     int lamp_light;
     bool lamp_status;
     bool user_light;
@@ -135,10 +145,12 @@ int main(){
 
     std::cout << "\ningin kontrol lampu? (1/0): ";
 
-        do{
-            std::cin >> user_light;
+    do
+    {
+        std::cin >> user_light;
 
-        if(user_light){
+        if (user_light)
+        {
             std::cout << "atur pencahayaan lampu (0-100)";
             std::cin >> user_input_lamp;
 
@@ -152,31 +164,55 @@ int main(){
                 lamp_status = false;
             }
         }
-        else{
+        else
+        {
             continue;
         }
 
-        if(lamp_status){
+        if (lamp_status)
+        {
             std::cout << "lampu dinyalakan!\nlamp value = " << lamp_light;
         }
-        else{
+        else
+        {
             std::cout << "lampu masih mati";
         }
 
         std::cout << "ingin kontrol lagi? (1/0)";
     } while (user_light == true);
+}
+
+int main()
+{
+    int max_attempt = 3;
+    if(!userSecurity(max_attempt)){
+        return 0;
+    }
+    std::srand(std::time(0));
+
+    int menu_input;
+    std::cout << "\nwelcome to the program\n(1) Watering\n(2) Control AC\n(3) Control Lamp\n";
+    std::cin >> menu_input;
+
+    switch (menu_input) {
+    case 1: {
+        int humidity_value = showHumidityValue();
+        std::string humidity_status = showHumidityStatus(humidity_value);
+        std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
+        waterMenu(humidity_value);
+        std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
+        break;
+    }
+    case 2: {
+        acMenu();
+    }
+    case 3: {
+        lampMenu();
+    }
+    default:
+        break;
+    }
 
     std::cout << "\nu are out";
-}
-
-
-int powerLamp(int lamp_light){
-    double power_lamp = (lamp_light / 100) * 15;
-    return power_lamp;
-}
-
-int powerAc(int temp_ac_celcius){
-    double power_ac = (temp_ac_celcius / 100) * 35;
-    return power_ac;
 }
 
