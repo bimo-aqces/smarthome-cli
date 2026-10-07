@@ -59,7 +59,7 @@ int main(){
             std::cout << "\nhumidity saat ini: " << humidity << "\nstatus: " << humidity_status;
         }
         else{
-            std::cout << "\nhumidity saat ini: " << humidity << "\nstatus: " << humidity_status;
+            continue;
         }
         std::cout << "\ningin menyiram lagi? (1/0): ";
     } while (user_water == true);
@@ -113,6 +113,55 @@ int main(){
         std::cout << "\ningin kontrol lagi? (1/0): ";
     } while (user_ac == true);
 
+    int lamp_light;
+    bool lamp_status;
+    bool user_light;
+    int user_input_lamp;
+
+    std::cout << "\ningin kontrol lampu? (1/0): ";
+
+        do{
+            std::cin >> user_light;
+
+        if(user_light){
+            std::cout << "atur pencahayaan lampu (0-100)";
+            std::cin >> user_input_lamp;
+
+            if (user_input_lamp != 0)
+            {
+                lamp_light = user_input_lamp;
+                lamp_status = true;
+            }
+            else
+            {
+                lamp_status = false;
+            }
+        }
+        else{
+            continue;
+        }
+
+        if(lamp_status){
+            std::cout << "lampu dinyalakan!\nlamp value = " << lamp_light;
+        }
+        else{
+            std::cout << "lampu masih mati";
+        }
+
+        std::cout << "ingin kontrol lagi? (1/0)";
+    } while (user_light == true);
+
     std::cout << "\nu are out";
+}
+
+
+int powerLamp(int lamp_light){
+    double power_lamp = (lamp_light / 100) * 15;
+    return power_lamp;
+}
+
+int powerAc(int temp_ac_celcius){
+    double power_ac = (temp_ac_celcius / 100) * 35;
+    return power_ac;
 }
 
