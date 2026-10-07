@@ -129,7 +129,7 @@ void acMenu(int &ac_value, bool &ac_status){
         {
             ac_value = acValue();
             ac_status = acStatus(ac_value);
-            std::cout << "ac value = " << ac_value << "ac status = " << ac_status;
+            std::cout << "ac value = " << ac_value << "\nac status = " << ac_status;
         }
         else
         {
@@ -143,7 +143,7 @@ void acMenu(int &ac_value, bool &ac_status){
 int lampValue(){
 
     int lamp_light;
-    std::cout << "atur pencahayaan lampu (0-100)";
+    std::cout << "atur pencahayaan lampu (0-100): ";
     std::cin >> lamp_light;
     return lamp_light;
 
@@ -161,32 +161,53 @@ bool lampStatus(int lamp_light){
 
 void lampMenu(int &lamp_light, bool &lamp_status){
 
-    int user_light;
+    bool user_light;
 
     std::cout << "\ningin kontrol lampu? (1/0): ";
 
     do
     {
         std::cin >> user_light;
-        lamp_light = lampValue();
-        lamp_status = lampStatus(lamp_light);
 
-        if (user_light && lamp_status)
+        if (user_light)
         {
-            std::cout << lamp_light << " " <<  lamp_status;
-            break;
+            lamp_light = lampValue();
+            lamp_status = lampStatus(lamp_light);
+            std::cout << "lamp value: " <<lamp_light << "\nlamp status: " <<  lamp_status << '\n';
+            
         }
         else
         {
-            std::cout << "lampu masih mati";
-            break;
+            continue;
+            
         }
 
-
-
-        std::cout << "ingin kontrol lagi? (1/0)";
+        std::cout << "ingin kontrol lagi? (1/0) ";
     } while (user_light == true);
 }
+
+double getPowerLamp(double lamp_value){
+    double power_lamp_value = lamp_value * 15 / 100;
+    return power_lamp_value;
+}
+
+double getPowerAC(int ac_value)
+{   
+    if(ac_value == 0){
+        return 0;
+    }
+    else{
+        double power_ac_value = 750 + (24 - ac_value) * 35;
+        return power_ac_value;
+    }
+}
+
+void powerMenu(double power_ac, double power_light){
+    double power_value = power_ac + power_light;
+    std::cout << "\nAC Power = " << power_ac << '\n' << "Lamp Power = " << power_light <<'\n';
+    std::cout << "Total Power = " << power_value << '\n';
+}
+
 
 int main()
 {
@@ -208,8 +229,9 @@ int main()
     int ac_value = 0;
     bool ac_status = false;
 
+
     do{
-        std::cout << "\nwelcome to the program\n(1) Watering\n(2) Control AC\n(3) Control Lamp\n";
+        std::cout << "\nwelcome to the program\n(1) Watering\n(2) Control AC\n(3) Control Lamp\n(4) Power info\n";
         std::cin >> menu_input;
         switch (menu_input)
         {
@@ -219,7 +241,7 @@ int main()
             waterMenu(humidity_value);
             humidity_status = showHumidityStatus(humidity_value);
             std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
-            std::cout << "back to main menu? (0/1)";
+            std::cout << "\nback to main menu? (0/1)";
             std::cin >> user_retry;
             break;
         }
@@ -237,6 +259,15 @@ int main()
             std::cin >> user_retry;
             break;
         }
+        case 4:{
+            double power_ac = getPowerAC(ac_value);
+            double power_lamp = getPowerLamp(lamp_light);
+            powerMenu(power_ac, power_lamp);
+            std::cout << "back to main menu? (0/1)";
+            std::cin >> user_retry;
+            break;
+        }
+
         default:
             std::cout << "invalid";
             break;
@@ -244,8 +275,9 @@ int main()
     } while (user_retry == true);
 
     std::cout << "Adjustment Recap:\n";
-    std::cout << "(1) Humidity Value: " << humidity_value << '(' << humidity_status << ')';
-    std::cout << "(2) Lamp light :" << lamp_light << '(' << lamp_status << ')';
-    std::cout << "Adjustment Recap:\n";
+    std::cout << "(1) Humidity Value: " << humidity_value << '(' << humidity_status << ")\n";
+    std::cout << "(2) Lamp light :" << lamp_light << '(' << lamp_status << ")\n";
+    std::cout << "(3) AC Value :" << ac_value << '(' << ac_status << ")\n";
+    std::cout << "(4) Power Net :" << getPowerAC(ac_value) + getPowerLamp(lamp_light) << '\n' << "AC Power: " << getPowerAC(ac_value) << '\n' << "Lamp Power: " << getPowerLamp(lamp_light) << '\n';
 }
 
