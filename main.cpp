@@ -80,12 +80,45 @@ void waterMenu(int &humidity_value){
     } while (user_water == true);
 }
 
-void acMenu(){
-    bool user_ac = 0;
+int acValue(){
     int user_control_temp;
-    double temp_ac_celcius;
-    bool ac_condition = false;
+    int temp_ac_celcius;
+    std::cout << "\natur suhu AC:\n(0) off\n(1) low\n(2) medium\n(3) high\n";
+    std::cin >> user_control_temp;
 
+    switch (user_control_temp)
+    {
+    case 0:
+        return 0;
+    case 1:
+        temp_ac_celcius = 30;
+        return temp_ac_celcius;
+        break;
+    case 2:
+        temp_ac_celcius = 22;
+        return temp_ac_celcius;
+        break;
+    case 3:
+        temp_ac_celcius = 14;
+        return temp_ac_celcius;
+        break;
+    default:
+        std::cout << "invalid input";
+        return 0;
+    }
+    }
+
+bool acStatus(int &temp_ac_celcius){
+    if(temp_ac_celcius){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void acMenu(int &ac_value, bool &ac_status){
+    bool user_ac;
     std::cout << "\ningin kontrol AC? (1/0): ";
 
     do
@@ -94,43 +127,13 @@ void acMenu(){
 
         if (user_ac)
         {
-            std::cout << "\natur suhu AC:\n(0) off\n(1) low\n(2) medium\n(3) high\n";
-            std::cin >> user_control_temp;
-
-            switch (user_control_temp)
-            {
-            case 0:
-                ac_condition = false;
-                break;
-            case 1:
-                ac_condition = true;
-                temp_ac_celcius = 30;
-                break;
-            case 2:
-                ac_condition = true;
-                temp_ac_celcius = 22;
-                break;
-            case 3:
-                ac_condition = true;
-                temp_ac_celcius = 14;
-                break;
-            default:
-                std::cout << "invalid input";
-                break;
-            }
+            ac_value = acValue();
+            ac_status = acStatus(ac_value);
+            std::cout << "ac value = " << ac_value << "ac status = " << ac_status;
         }
         else
         {
             continue;
-        }
-
-        if (ac_condition)
-        {
-            std::cout << "suhu ac: " << temp_ac_celcius;
-        }
-        else
-        {
-            std::cout << "ac tetap mati";
         }
 
         std::cout << "\ningin kontrol lagi? (1/0): ";
@@ -199,8 +202,11 @@ int main()
     int humidity_value = showHumidityValue();
     std::string humidity_status = showHumidityStatus(humidity_value);
 
-    int lamp_light;
-    bool lamp_status;
+    int lamp_light = 0;
+    bool lamp_status = false;
+
+    int ac_value = 0;
+    bool ac_status = false;
 
     do{
         std::cout << "\nwelcome to the program\n(1) Watering\n(2) Control AC\n(3) Control Lamp\n";
@@ -211,6 +217,7 @@ int main()
         {
             std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
             waterMenu(humidity_value);
+            humidity_status = showHumidityStatus(humidity_value);
             std::cout << "Humidity Info:\nValue = " << humidity_value << '%' << "\nStatus = " << humidity_status;
             std::cout << "back to main menu? (0/1)";
             std::cin >> user_retry;
@@ -218,7 +225,7 @@ int main()
         }
         case 2:
         {
-            acMenu();
+            acMenu(ac_value, ac_status);
             std::cout << "back to main menu? (0/1)";
             std::cin >> user_retry;
             break;
